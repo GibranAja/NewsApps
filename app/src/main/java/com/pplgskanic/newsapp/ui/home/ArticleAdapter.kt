@@ -12,7 +12,7 @@ import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapp.utils.withDateFormat
 import com.pplgskanic.newsapps.databinding.ItemArticleBinding
 
-class ArticleAdapter(
+class ArticleAdapter( private val onClick: (article: Article) -> Unit
 ) : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(diffCallback) {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
@@ -39,6 +39,10 @@ class ArticleAdapter(
                     tvTitle.text = it.title
                     tvCategory.text = it.category.name
                     tvAuthorDate.text = it.user.name + " - " + it.createdAt.withDateFormat()
+                    // action click pada list article
+                    itemView.setOnClickListener {
+                        onClick(item)
+                    }
 
                 }
             }

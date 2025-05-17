@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.pplgskanic.newsapp.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_detailArticleFragment"
+            app:destination="@id/detailArticleFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_categories"
         android:name="com.pplgskanic.newsapp.ui.categories.CategoryFragment"
@@ -20,4 +24,9 @@
         android:name="com.pplgskanic.newsapp.ui.bookmark.BookmarkFragment"
         android:label="fragment_bookmark"
         tools:layout="@layout/fragment_bookmark" />
+    <fragment
+        android:id="@+id/detailArticleFragment"
+        android:name="com.pplgskanic.newsapp.ui.detail.DetailArticleFragment"
+        android:label="fragment_detail_article"
+        tools:layout="@layout/fragment_detail_article" />
 </navigation>

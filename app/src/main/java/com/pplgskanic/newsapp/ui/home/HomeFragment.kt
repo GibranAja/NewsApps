@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapps.databinding.FragmentHomeBinding
@@ -38,7 +39,14 @@ class HomeFragment : Fragment() {
 
     // Inisialisasi articleAdapter dengan Lazy
     private val articleAdapter by lazy {
-        ArticleAdapter()
+        ArticleAdapter { article ->
+            detailArticle(article)
+        }
+    }
+
+    private fun detailArticle(article: Article) {
+        val action = HomeFragmentDirections.actionNavigationHomeToDetailArticleFragment()
+        findNavController().navigate(action)
     }
 
 
