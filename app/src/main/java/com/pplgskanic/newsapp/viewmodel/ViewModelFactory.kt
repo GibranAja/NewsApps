@@ -1,10 +1,10 @@
 package com.pplgskanic.newsapp.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.di.Injection
+import com.pplgskanic.newsapp.ui.categories.CategoryViewModel
 import com.pplgskanic.newsapp.ui.home.HomeViewModel
 
 class ViewModelFactory(
@@ -21,10 +21,14 @@ class ViewModelFactory(
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(CategoryViewModel::class.java) -> {
+                CategoryViewModel(repository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
