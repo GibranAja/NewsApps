@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapps.databinding.FragmentHomeBinding
 import com.pplgskanic.newsapp.viewmodel.ViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -34,6 +35,12 @@ class HomeFragment : Fragment() {
     private val categoryAdapter by lazy {
         CategoryAdapter()
     }
+
+    // Inisialisasi articleAdapter dengan Lazy
+    private val articleAdapter by lazy {
+        ArticleAdapter()
+    }
+
 
     // Method onCreateView dipanggil ketika Fragment pertama kali dibuat
     override fun onCreateView(
@@ -67,6 +74,13 @@ class HomeFragment : Fragment() {
                 categoryAdapter.submitData(it)
             }
         }
+
+        // Memantau Flow article dari viewModel dan mengirimkan data ke articleAdapter dengan collectLatest
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.article.collectLatest {
+                articleAdapter.submitData(it)
+            }
+        }
     }
 
     // Method setUi untuk menampilkan tampilan pertama kali
@@ -79,6 +93,14 @@ class HomeFragment : Fragment() {
             setHasFixedSize(false)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        // Set adapter articleAdpter ke RecyclerView rvArtcle, dengan layout manager Linear
+        rvArticle.apply {
+            adapter = articleAdapter
+            setHasFixedSize(false)
+            layoutManager =
+                LinearLayoutManager(requireContext())
         }
     }
 

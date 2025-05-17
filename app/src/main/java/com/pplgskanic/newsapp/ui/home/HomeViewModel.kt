@@ -18,7 +18,9 @@ class HomeViewModel(
     private var _sliders = MutableLiveData<List<Sliders>>()
     val slider: LiveData<List<Sliders>> get() = _sliders
 
-    val category =  repository.getCategory().cachedIn(viewModelScope)
+    val category = repository.getCategory().cachedIn(viewModelScope)
+
+    val article = repository.getArticle().cachedIn(viewModelScope)
 
     init {
         getSliders()

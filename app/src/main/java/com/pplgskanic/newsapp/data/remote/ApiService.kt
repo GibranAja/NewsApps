@@ -1,9 +1,6 @@
 package com.pplgskanic.newsapp.data.remote
 
-import com.pplgskanic.newsapp.data.remote.model.Category
-import com.pplgskanic.newsapp.data.remote.model.Paging
-import com.pplgskanic.newsapp.data.remote.model.Response
-import com.pplgskanic.newsapp.data.remote.model.Sliders
+import com.pplgskanic.newsapp.data.remote.model.*
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,7 +11,12 @@ interface ApiService {
 
     @GET("public/categories")
     suspend fun getCategory(
-        @Query("page") page: Int,
+        @Query("page") page: Int
     ): Response<Paging<Category>>
+
+    @GET("public/posts")
+    suspend fun getArticle(
+        @Query("page") page: Int
+    ): Response<Paging<Article>>
 
 }

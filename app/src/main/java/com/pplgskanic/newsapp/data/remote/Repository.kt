@@ -3,7 +3,9 @@ package com.pplgskanic.newsapp.data.remote
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.pplgskanic.newsapp.data.datasource.ArticlePagingSource
 import com.pplgskanic.newsapp.data.datasource.CategoriesPagingSource
+import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapp.data.remote.model.Response
 import com.pplgskanic.newsapp.data.remote.model.Sliders
@@ -35,6 +37,16 @@ class Repository private constructor(
             config = pagingConfig,
             pagingSourceFactory = {
                 CategoriesPagingSource(apiService)
+            }
+
+        ).flow
+    }
+
+    fun getArticle(): Flow<PagingData<Article>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                ArticlePagingSource(apiService)
             }
 
         ).flow
