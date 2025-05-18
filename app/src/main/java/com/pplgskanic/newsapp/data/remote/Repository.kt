@@ -2,12 +2,16 @@ package com.pplgskanic.newsapp.data.remote
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.pplgskanic.newsapp.data.Resource
 import com.pplgskanic.newsapp.data.datasource.ArticlePagingSource
+import com.pplgskanic.newsapp.data.datasource.ArticleRemoteMediator
 import com.pplgskanic.newsapp.data.datasource.CategoriesPagingSource
+import com.pplgskanic.newsapp.data.local.NewsDatabase
+import com.pplgskanic.newsapp.data.local.entity.ArticleEntity
 import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapp.data.remote.model.Response
@@ -15,16 +19,17 @@ import com.pplgskanic.newsapp.data.remote.model.Sliders
 import kotlinx.coroutines.flow.Flow
 
 class Repository private constructor(
-    private val apiService: ApiService
-) {
-
+    private val apiService: ApiService,
+    private val database: NewsDatabase
+){
     companion object {
         private var instance: Repository? = null
         fun getInstance(
-            apiService: ApiService
+            apiService: ApiService,
+            database: NewsDatabase
         ): Repository = instance ?: synchronized(this)
         {
-            instance ?: Repository(apiService)
+            instance ?: Repository(apiService, database)
         }
     }
 
@@ -45,13 +50,15 @@ class Repository private constructor(
         ).flow
     }
 
-    fun getArticle(): Flow<PagingData<Article>> {
+    fun getArticle(): Flow<PagingData<ArticleEntity>> {
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = pagingConfig,
+            remoteMediator = ArticleRemoteMediator(apiService, database),
             pagingSourceFactory = {
-                ArticlePagingSource(apiService)
+                database.articleDao().getArticle()
+                //ArticlePagingSource(apiService)
             }
-
         ).flow
     }
 

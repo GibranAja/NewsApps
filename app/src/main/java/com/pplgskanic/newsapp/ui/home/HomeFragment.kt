@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
 
     // Inisialisasi viewModel dengan viewModels
     private val viewModel by viewModels<HomeViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(requireContext())
     }
 
     // Inisialisasi sliderAdapter dengan Lazy
@@ -47,11 +47,16 @@ class HomeFragment : Fragment() {
         )
         findNavController().navigate(action)
     }
-    // Inisialisasi articleAdapter dengan Lazy
+
     private val articleAdapter by lazy {
-        ArticleAdapter { article ->
+        ArticleAdapter({ article ->
             detailArticle(article)
-        }
+        }, { article, position ->
+            bookmarked(article, position)
+        })
+    }
+    function bookmarked(article:ArticleEntity, position:Int){
+
     }
 
     private fun detailArticle(article: Article) {

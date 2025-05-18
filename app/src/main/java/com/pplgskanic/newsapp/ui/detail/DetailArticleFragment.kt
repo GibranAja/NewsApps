@@ -27,7 +27,7 @@ class DetailArticleFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: DetailArticleFragmentArgs by navArgs()
     private val viewModel by viewModels<DetailViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(requireContext())
     }
 
     override fun onCreateView(

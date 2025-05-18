@@ -1,5 +1,6 @@
 package com.pplgskanic.newsapp.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pplgskanic.newsapp.data.remote.Repository
@@ -14,9 +15,9 @@ class ViewModelFactory(
 
     companion object {
         private var instance: ViewModelFactory? = null
-        fun getInstance(): ViewModelFactory = instance ?: synchronized(this) {
+        fun getInstance(context: Context): ViewModelFactory = instance ?: synchronized(this) {
             instance ?: ViewModelFactory(
-                Injection.provideRepository()
+                Injection.provideRepository(context)
             )
         }
     }

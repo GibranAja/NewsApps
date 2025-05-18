@@ -1,11 +1,14 @@
 package com.pplgskanic.newsapp.di
 
+import android.content.Context
+import com.pplgskanic.newsapp.data.local.NewsDatabase
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.data.remote.ApiConfig
 
 object Injection {
-    fun provideRepository(): Repository {
+    fun provideRepository(context: Context): Repository {
         val apiService = ApiConfig.getApiService()
-        return Repository.getInstance(apiService)
+        val database = NewsDatabase.getDatabase(context)
+        return Repository.getInstance(apiService, database)
     }
 }

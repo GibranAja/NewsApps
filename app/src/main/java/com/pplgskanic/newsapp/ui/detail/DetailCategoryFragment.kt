@@ -21,7 +21,7 @@ class DetailCategoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<DetailViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(requireContext())
     }
 
     private val articleByCategoryAdapter by lazy {

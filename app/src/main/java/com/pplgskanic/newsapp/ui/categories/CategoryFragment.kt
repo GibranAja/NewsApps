@@ -27,7 +27,7 @@ class CategoryFragment : Fragment() {
 
     // Inisialisasi viewModel dengan viewModels
     private val viewModel by viewModels<CategoryViewModel> {
-        ViewModelFactory.getInstance()
+        ViewModelFactory.getInstance(requireContext())
     }
 
     // Inisialisasi categoryAllAdapter dengan Lazy
