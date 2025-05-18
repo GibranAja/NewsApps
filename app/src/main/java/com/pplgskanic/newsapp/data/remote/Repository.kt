@@ -62,6 +62,15 @@ class Repository private constructor(
         ).flow
     }
 
+    fun searchSearchArticle(search: String): Flow<PagingData<ArticleEntity>> {
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = {
+                ArticlePagingSource(apiService, database, search)
+            }
+        ).flow
+    }
+
     fun getDetailArticle(slug: String): LiveData<Resource<Article>> = liveData {
         emit(Resource.Loading)
         try {

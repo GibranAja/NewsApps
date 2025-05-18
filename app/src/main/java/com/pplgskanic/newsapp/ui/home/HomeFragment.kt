@@ -169,6 +169,7 @@ class HomeFragment : Fragment() {
             viewModel.saveThemeSetting(!isDarkMode)
         }
         btnSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_searchFragment)
         }
     }
 

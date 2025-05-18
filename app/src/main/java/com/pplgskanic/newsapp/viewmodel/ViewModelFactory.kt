@@ -9,6 +9,7 @@ import com.pplgskanic.newsapp.ui.detail.DetailViewModel
 import com.pplgskanic.newsapp.ui.home.HomeViewModel
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.di.Injection
+import com.pplgskanic.newsapp.ui.search.SearchViewModel
 import com.pplgskanic.newsapp.utils.SettingPreferences
 
 class ViewModelFactory(
@@ -42,7 +43,11 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(BookmarkViewModel::class.java) -> {
                 BookmarkViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
+                SearchViewModel(repository) as T
+            }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
     }
+
 }

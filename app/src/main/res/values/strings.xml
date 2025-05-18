@@ -22,4 +22,7 @@
     <string name="notification_channel_name">Notification</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_search_article">Cari Artikel</string>
+    <string name="btn_text_cancel">Batal</string>
+    <string name="article_empty">Artikel Tidak Ada</string>
 </resources>

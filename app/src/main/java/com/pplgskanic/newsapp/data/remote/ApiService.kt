@@ -30,4 +30,10 @@ interface ApiService {
         @Path("slug") slug:String
     ):Response<Category>
 
+    @GET("public/posts")
+    suspend fun getArticle(
+        @Query("page") page: Int,
+        @Query("search") search: String = ""
+    ): Response<Paging<Article>>
+
 }
