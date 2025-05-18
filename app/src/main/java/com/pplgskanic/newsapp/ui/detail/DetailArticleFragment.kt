@@ -29,6 +29,7 @@ class DetailArticleFragment : Fragment() {
     private val viewModel by viewModels<DetailViewModel> {
         ViewModelFactory.getInstance(requireContext())
     }
+    private var isBookmark: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,11 +41,11 @@ class DetailArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUi()
-        setObserver()  // Jangan lupa memanggil setObserver()
+        setObserver()
     }
 
     private fun setObserver() {
-        viewModel.getDetailArticle(args.slug).observe(viewLifecycleOwner) { resources ->
+        viewModel.getDetailArticle(args.article.slug).observe(viewLifecycleOwner) { resources ->
             when (resources) {
                 is Resource.Loading -> {
                     showLoading(requireContext())
@@ -73,16 +74,6 @@ class DetailArticleFragment : Fragment() {
 
     }
 
-    // Helper function untuk menangani perbedaan API level
-    private fun fromHtml(html: String): Spanned {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
-        } else {
-            @Suppress("DEPRECATION")
-            Html.fromHtml(html)
-        }
-    }
-
     private fun setUi() = with(binding) {
         toolbar.apply {
             setNavigationIcon(R.drawable.ic_arrow_back)
@@ -93,6 +84,9 @@ class DetailArticleFragment : Fragment() {
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.bookmark -> {
+                        isBookmark = !isBookmark
+                        changeIcon()
+                        viewModel.setBookmark(args.article)
                         true
                     }
                     R.id.share -> {
@@ -102,10 +96,23 @@ class DetailArticleFragment : Fragment() {
                 }
             }
         }
+        isBookmark = args.article.isBookmark
+        changeIcon()
+    }
+
+    //Change Icon
+    private fun changeIcon() {
+        if (isBookmark) {
+            binding.toolbar.menu.findItem(R.id.bookmark).setIcon(R.drawable.ic_bookmarked)
+        } else {
+            binding.toolbar.menu.findItem(R.id.bookmark).setIcon(R.drawable.ic_bookmark)
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }

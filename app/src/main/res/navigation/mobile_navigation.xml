@@ -21,7 +21,11 @@
         android:id="@+id/navigation_bookmark"
         android:name="com.pplgskanic.newsapp.ui.bookmark.BookmarkFragment"
         android:label="fragment_bookmark"
-        tools:layout="@layout/fragment_bookmark" />
+        tools:layout="@layout/fragment_bookmark" >
+        <action
+            android:id="@+id/action_navigation_bookmark_to_detailArticleFragment"
+            app:destination="@id/detailArticleFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_categories"
         android:name="com.pplgskanic.newsapp.ui.categories.CategoryFragment"
@@ -37,9 +41,8 @@
         android:label="fragment_detail_article"
         tools:layout="@layout/fragment_detail_article" >
         <argument
-            android:name="slug"
-            app:argType="string"
-            android:defaultValue="slug" />
+            android:name="article"
+            app:argType="com.pplgskanic.newsapp.data.local.entity.ArticleEntity" />
     </fragment>
     <fragment
         android:id="@+id/detailCategoryFragment"

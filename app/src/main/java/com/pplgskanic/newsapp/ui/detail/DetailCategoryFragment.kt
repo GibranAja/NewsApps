@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pplgskanic.newsapps.R
 import com.pplgskanic.newsapp.data.Resource
+import com.pplgskanic.newsapp.data.local.entity.ArticleEntity
 import com.pplgskanic.newsapp.data.remote.model.Article
 import com.pplgskanic.newsapps.databinding.FragmentDetailCategoryBinding
 import com.pplgskanic.newsapp.viewmodel.ViewModelFactory
@@ -25,17 +26,34 @@ class DetailCategoryFragment : Fragment() {
     }
 
     private val articleByCategoryAdapter by lazy {
-        ArticleByCategoryAdapter { article ->
+        ArticleByCategoryAdapter({ article ->
             detailArticle(article)
+        }, { article, position ->
+            bookmarked(article, position)
+        })
+    }
+
+    private fun detailArticle(article: ArticleEntity) {
+        val action =
+            DetailCategoryFragmentDirections.actionDetailCategoryFragmentToDetailArticleFragment(
+                article
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun bookmarked(article: ArticleEntity, position: Int) {
+        val isBookmarked = article.isBookmark
+        viewModel.setBookmark(article)
+        articleByCategoryAdapter.notifyItemChanged(position)
+        if (!isBookmarked) {
+            message("Article ${article.title} berhasil di simpan")
+        } else {
+            message("Article ${article.title} berhasil di hapus")
         }
     }
 
-    private fun detailArticle(article: Article) {
-        val action =
-            DetailCategoryFragmentDirections.actionDetailCategoryFragmentToDetailArticleFragment(
-                slug = article.slug
-            )
-        findNavController().navigate(action)
+    private fun message(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private val args: DetailCategoryFragmentArgs by navArgs()
@@ -77,7 +95,7 @@ class DetailCategoryFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    val listArticle = resources.data.post
+                    val listArticle = resources.data
                     when (listArticle.isNotEmpty()) {
                         true -> {
                             articleByCategoryAdapter.submitList(listArticle)
@@ -96,7 +114,6 @@ class DetailCategoryFragment : Fragment() {
                     Toast.makeText(requireContext(), resources.error, Toast.LENGTH_SHORT).show()
                 }
             }
-
         }
     }
 

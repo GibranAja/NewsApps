@@ -73,15 +73,37 @@ class Repository private constructor(
         }
     }
 
-    fun getDetailCategory(slug: String): LiveData<Resource<Category>> = liveData {
+    fun getDetailCategory(slug: String): LiveData<Resource<List<ArticleEntity>>> = liveData {
         emit(Resource.Loading)
         try {
             val response = apiService.getDetailCategory(slug)
-            emit(Resource.Success(response.data))
+            val article = response.data.post.map { article ->
+                val isBookmarked = database.articleDao().isArticleBookmarked(id = article.id)
+                ArticleEntity(
+                    id = article.id,
+                    image = article.image,
+                    title = article.title,
+                    content = article.content,
+                    category = article.category.name,
+                    author = "article.user.name",
+                    date = article.createdAt,
+                    isBookmark = isBookmarked,
+                    slug = article.slug
+                )
+            }
+            emit(Resource.Success(article))
 
         } catch (e: Exception) {
             emit(Resource.Error(e.toString()))
         }
+    }
+
+    fun getBookmarkArticle(): LiveData<List<ArticleEntity>> =
+        database.articleDao().getArticleBookMark()
+
+    suspend fun setArticleBookmark(articleEntity: ArticleEntity, bookmarkState: Boolean) {
+        articleEntity.isBookmark = bookmarkState
+        database.articleDao().updateArticle(articleEntity)
     }
 
 }

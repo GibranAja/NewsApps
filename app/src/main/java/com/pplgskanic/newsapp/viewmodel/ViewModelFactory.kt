@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.di.Injection
+import com.pplgskanic.newsapp.ui.bookmark.BookmarkViewModel
 import com.pplgskanic.newsapp.ui.categories.CategoryViewModel
 import com.pplgskanic.newsapp.ui.detail.DetailViewModel
 import com.pplgskanic.newsapp.ui.home.HomeViewModel
@@ -34,6 +35,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(BookmarkViewModel::class.java) -> {
+                BookmarkViewModel(repository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
