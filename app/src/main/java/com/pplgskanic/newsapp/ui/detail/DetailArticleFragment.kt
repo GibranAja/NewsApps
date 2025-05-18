@@ -14,6 +14,8 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.pplgskanic.newsapp.data.Resource
+import com.pplgskanic.newsapp.utils.closeLoading
+import com.pplgskanic.newsapp.utils.showLoading
 import com.pplgskanic.newsapp.viewmodel.ViewModelFactory
 import com.pplgskanic.newsapp.utils.withDateFormat
 import com.pplgskanic.newsapps.R
@@ -45,9 +47,11 @@ class DetailArticleFragment : Fragment() {
         viewModel.getDetailArticle(args.slug).observe(viewLifecycleOwner) { resources ->
             when (resources) {
                 is Resource.Loading -> {
-                    // Handle loading state
+                    showLoading(requireContext())
+
                 }
                 is Resource.Success -> {
+                    closeLoading()
                     val article = resources.data
                     binding.imageArticle.load(article.image) {
                         transformations(RoundedCornersTransformation(12f))
@@ -57,19 +61,16 @@ class DetailArticleFragment : Fragment() {
                     binding.tvAuthor.text = article.user.name
                     binding.tvDate.text = article.createdAt.withDateFormat()
                     binding.tvView.text = article.viewsCount
-
-                    // Jika menggunakan TextView
-                    val spannedText = fromHtml(article.content)
-                    binding.wvContent.text = spannedText
-
-                    // Jika menggunakan WebView, gunakan kode berikut sebagai gantinya:
-                    // binding.wvContent.loadData(article.content, "text/html", "UTF-8")
+                    binding.wvContent.text =
+                        Html.fromHtml(article.content, Html.FROM_HTML_MODE_LEGACY)
                 }
                 is Resource.Error -> {
-                    // Handle error state
+                    closeLoading()
                 }
             }
+
         }
+
     }
 
     // Helper function untuk menangani perbedaan API level
