@@ -3,22 +3,25 @@ package com.pplgskanic.newsapp.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.pplgskanic.newsapp.data.remote.Repository
-import com.pplgskanic.newsapp.di.Injection
 import com.pplgskanic.newsapp.ui.bookmark.BookmarkViewModel
 import com.pplgskanic.newsapp.ui.categories.CategoryViewModel
 import com.pplgskanic.newsapp.ui.detail.DetailViewModel
 import com.pplgskanic.newsapp.ui.home.HomeViewModel
+import com.pplgskanic.newsapp.data.remote.Repository
+import com.pplgskanic.newsapp.di.Injection
+import com.pplgskanic.newsapp.utils.SettingPreferences
 
 class ViewModelFactory(
-    private val repository: Repository
+    private val repository: Repository,
+    private val settingPreferences: SettingPreferences
 ) : ViewModelProvider.NewInstanceFactory() {
 
     companion object {
         private var instance: ViewModelFactory? = null
         fun getInstance(context: Context): ViewModelFactory = instance ?: synchronized(this) {
             instance ?: ViewModelFactory(
-                Injection.provideRepository(context)
+                Injection.provideRepository(context),
+                Injection.providePrefDataStore(context)
             )
         }
     }
@@ -28,7 +31,7 @@ class ViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(repository) as T
+                HomeViewModel(repository, settingPreferences) as T
             }
             modelClass.isAssignableFrom(CategoryViewModel::class.java) -> {
                 CategoryViewModel(repository) as T

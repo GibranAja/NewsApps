@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pplgskanic.newsapps.R
 import com.pplgskanic.newsapp.data.local.entity.ArticleEntity
 import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapps.databinding.FragmentHomeBinding
@@ -23,6 +26,7 @@ class HomeFragment : Fragment() {
     // Deklarasi variabel binding sebagai nullable FragmentHomeBinding
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private var isDarkMode: Boolean = false
 
     // Inisialisasi viewModel dengan viewModels
     private val viewModel by viewModels<HomeViewModel> {
@@ -49,12 +53,19 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    // Inisialisasi articleAdapter dengan Lazy
     private val articleAdapter by lazy {
         ArticleAdapter({ article ->
             detailArticle(article)
         }, { article, position ->
             bookmarked(article, position)
         })
+    }
+
+    private fun detailArticle(article: ArticleEntity) {
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToDetailArticleFragment(article)
+        findNavController().navigate(action)
     }
 
     private fun bookmarked(article: ArticleEntity, position: Int) {
@@ -72,16 +83,9 @@ class HomeFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun detailArticle(article: ArticleEntity) {
-        val action = HomeFragmentDirections.actionNavigationHomeToDetailArticleFragment(article)
-        findNavController().navigate(action)
-    }
-
-
     // Method onCreateView dipanggil ketika Fragment pertama kali dibuat
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         // Inflate layout FragmentHomeBinding dan set ke _binding
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -95,6 +99,7 @@ class HomeFragment : Fragment() {
         // Panggil method setUi dan setObserver
         setUi()
         setObserver()
+        setOnClick()
     }
 
     // Method setObserver untuk mengambil data dari viewModel
@@ -102,6 +107,7 @@ class HomeFragment : Fragment() {
         // Memantau LiveData slider dari viewModel dan mengirimkan data ke sliderAdapter
         viewModel.slider.observe(viewLifecycleOwner) {
             sliderAdapter.submitList(it)
+            binding.dotIndicator.setViewPager2(binding.vpBanner)
         }
 
         // Memantau Flow category dari viewModel dan mengirimkan data ke categoryAdapter dengan collectLatest
@@ -115,6 +121,25 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.article.collectLatest {
                 articleAdapter.submitData(it)
+            }
+        }
+
+        viewModel.getThemeSettings().observe(viewLifecycleOwner) { isDarkModeActive ->
+            isDarkMode = when (isDarkModeActive) {
+                true -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    binding.btnDarkMode.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_light_mode)
+                    )
+                    true
+                }
+                else -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    binding.btnDarkMode.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_dark_mode)
+                    )
+                    false
+                }
             }
         }
     }
@@ -135,8 +160,15 @@ class HomeFragment : Fragment() {
         rvArticle.apply {
             adapter = articleAdapter
             setHasFixedSize(false)
-            layoutManager =
-                LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    private fun setOnClick() = with(binding) {
+        btnDarkMode.setOnClickListener {
+            viewModel.saveThemeSetting(!isDarkMode)
+        }
+        btnSearch.setOnClickListener {
         }
     }
 

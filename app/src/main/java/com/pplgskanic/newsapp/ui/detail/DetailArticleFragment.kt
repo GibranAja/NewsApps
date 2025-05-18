@@ -1,5 +1,6 @@
 package com.pplgskanic.newsapp.ui.detail
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -90,6 +91,15 @@ class DetailArticleFragment : Fragment() {
                         true
                     }
                     R.id.share -> {
+                        val sendIntent = Intent(Intent.ACTION_SEND)
+                        sendIntent.type = "text/plain"
+                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, args.article.title)
+                        sendIntent.putExtra(
+                            Intent.EXTRA_TEXT,
+                            "https://news-api.pplgsmkn1ciomas.my.id/" + args.article.slug
+                        )
+
+                        startActivity(Intent.createChooser(sendIntent, "Bagikan Artikel"))
                         true
                     }
                     else -> false

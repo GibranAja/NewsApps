@@ -4,17 +4,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.google.android.material.slider.Slider
 import com.pplgskanic.newsapp.data.local.entity.ArticleEntity
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.data.remote.model.Sliders
+import com.pplgskanic.newsapp.utils.SettingPreferences
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repository: Repository
+    private val repository: Repository,
+    private val preferences: SettingPreferences
 ) : ViewModel() {
     private var _sliders = MutableLiveData<List<Sliders>>()
     val slider: LiveData<List<Sliders>> get() = _sliders
@@ -45,6 +48,16 @@ class HomeViewModel(
         viewModelScope.launch {
             val isBookmark = article.isBookmark
             repository.setArticleBookmark(article, !isBookmark)
+        }
+    }
+
+    fun getThemeSettings(): LiveData<Boolean> {
+        return preferences.getThemeSettings().asLiveData()
+    }
+
+    fun saveThemeSetting(isDarkModeActive: Boolean) {
+        viewModelScope.launch {
+            preferences.saveThemeSettings(isDarkModeActive)
         }
     }
 }
