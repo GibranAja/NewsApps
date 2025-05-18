@@ -2,6 +2,7 @@ package com.pplgskanic.newsapp.data.remote
 
 import com.pplgskanic.newsapp.data.remote.model.*
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -18,5 +19,10 @@ interface ApiService {
     suspend fun getArticle(
         @Query("page") page: Int
     ): Response<Paging<Article>>
+
+    @GET("public/posts/{slug}")
+    suspend fun getDetailArticle(
+        @Path("slug") slug:String
+    ):Response<Article>
 
 }

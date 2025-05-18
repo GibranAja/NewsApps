@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun detailArticle(article: Article) {
-        val action = HomeFragmentDirections.actionNavigationHomeToDetailArticleFragment()
+        val action = HomeFragmentDirections.actionNavigationHomeToDetailArticleFragment(slug = article.slug)
         findNavController().navigate(action)
     }
 

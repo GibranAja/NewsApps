@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pplgskanic.newsapp.data.remote.Repository
 import com.pplgskanic.newsapp.di.Injection
 import com.pplgskanic.newsapp.ui.categories.CategoryViewModel
+import com.pplgskanic.newsapp.ui.detail.DetailViewModel
 import com.pplgskanic.newsapp.ui.home.HomeViewModel
 
 class ViewModelFactory(
@@ -29,6 +30,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(CategoryViewModel::class.java) -> {
                 CategoryViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
+                DetailViewModel(repository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

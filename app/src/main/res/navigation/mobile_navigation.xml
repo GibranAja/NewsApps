@@ -28,5 +28,9 @@
         android:id="@+id/detailArticleFragment"
         android:name="com.pplgskanic.newsapp.ui.detail.DetailArticleFragment"
         android:label="fragment_detail_article"
-        tools:layout="@layout/fragment_detail_article" />
+        tools:layout="@layout/fragment_detail_article" >
+        <argument android:name="slug"
+            app:argType="string"
+            android:defaultValue="slug" />
+    </fragment>
 </navigation>

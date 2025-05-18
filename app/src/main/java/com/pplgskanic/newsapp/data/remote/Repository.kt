@@ -1,8 +1,11 @@
 package com.pplgskanic.newsapp.data.remote
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.pplgskanic.newsapp.data.Resource
 import com.pplgskanic.newsapp.data.datasource.ArticlePagingSource
 import com.pplgskanic.newsapp.data.datasource.CategoriesPagingSource
 import com.pplgskanic.newsapp.data.remote.model.Article
@@ -50,6 +53,17 @@ class Repository private constructor(
             }
 
         ).flow
+    }
+
+    fun getDetailArticle(slug: String): LiveData<Resource<Article>> = liveData {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getDetailArticle(slug)
+            emit(Resource.Success(response.data))
+
+        } catch (e: Exception) {
+            emit(Resource.Error(e.toString()))
+        }
     }
 
 }
