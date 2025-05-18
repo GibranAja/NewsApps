@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapps.databinding.ItemCategoryBinding
 
-class CategoryAdapter() :
+class CategoryAdapter(private val onClick: (category: Category) -> Unit) :
     PagingDataAdapter<Category, CategoryAdapter.CategoryViewHolder>(diffCallback) {
 
 
@@ -27,6 +27,9 @@ class CategoryAdapter() :
         fun bind(item: Category?) {
             item?.let { category ->
                 binding.itemCategory.text = category.name
+                itemView.setOnClickListener {
+                    onClick(item)
+                }
             }
         }
     }

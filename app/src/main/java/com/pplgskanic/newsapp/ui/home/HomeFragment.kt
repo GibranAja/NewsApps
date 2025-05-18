@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pplgskanic.newsapp.data.remote.model.Article
+import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapps.databinding.FragmentHomeBinding
 import com.pplgskanic.newsapp.viewmodel.ViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -34,9 +35,18 @@ class HomeFragment : Fragment() {
 
     // Inisialisasi categoryAdapter dengan Lazy
     private val categoryAdapter by lazy {
-        CategoryAdapter()
+        CategoryAdapter { category ->
+            detailCategory(category)
+        }
     }
 
+    private fun detailCategory(category: Category) {
+        val action = HomeFragmentDirections.actionNavigationHomeToDetailCategoryFragment(
+            slug = category.slug,
+            title = category.name
+        )
+        findNavController().navigate(action)
+    }
     // Inisialisasi articleAdapter dengan Lazy
     private val articleAdapter by lazy {
         ArticleAdapter { article ->

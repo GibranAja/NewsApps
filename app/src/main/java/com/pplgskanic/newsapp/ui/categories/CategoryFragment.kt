@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.pplgskanic.newsapps.ui.categories.CategoryAllAdapter
+import com.pplgskanic.newsapp.data.remote.model.Category
+import com.pplgskanic.newsapp.ui.categories.CategoryAllAdapter
 import com.pplgskanic.newsapps.databinding.FragmentCategoryBinding
 import com.pplgskanic.newsapp.viewmodel.ViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +32,17 @@ class CategoryFragment : Fragment() {
 
     // Inisialisasi categoryAllAdapter dengan Lazy
     private val categoryAllAdapter by lazy {
-        CategoryAllAdapter()
+        CategoryAllAdapter { category ->
+            detailCategory(category)
+        }
+    }
+
+    private fun detailCategory(category: Category) {
+        val action = CategoryFragmentDirections.actionNavigationCategoriesToDetailCategoryFragment(
+            slug = category.slug,
+            title = category.name
+        )
+        findNavController().navigate(action)
     }
 
     /*

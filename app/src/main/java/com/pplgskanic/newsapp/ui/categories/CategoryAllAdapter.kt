@@ -1,4 +1,4 @@
-package com.pplgskanic.newsapps.ui.categories
+package com.pplgskanic.newsapp.ui.categories
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.pplgskanic.newsapps.R
 import com.pplgskanic.newsapp.data.remote.model.Category
 import com.pplgskanic.newsapps.databinding.ItemCategoryAllBinding
 
-class CategoryAllAdapter() :
+class CategoryAllAdapter(private val onClick: (category: Category) -> Unit) :
     PagingDataAdapter<Category, CategoryAllAdapter.CategoryAllViewHolder>(diffCallback) {
 
     override fun onBindViewHolder(holder: CategoryAllViewHolder, position: Int) {
@@ -35,6 +35,9 @@ class CategoryAllAdapter() :
                         transformations(CircleCropTransformation())
                     }
                     tvCategory.text = it.name
+                    itemView.setOnClickListener {
+                        onClick(item)
+                    }
                 }
             }
         }

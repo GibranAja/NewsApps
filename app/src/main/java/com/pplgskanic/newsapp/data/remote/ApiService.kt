@@ -25,4 +25,9 @@ interface ApiService {
         @Path("slug") slug:String
     ):Response<Article>
 
+    @GET("public/categories/{slug}")
+    suspend fun getDetailCategory(
+        @Path("slug") slug:String
+    ):Response<Category>
+
 }

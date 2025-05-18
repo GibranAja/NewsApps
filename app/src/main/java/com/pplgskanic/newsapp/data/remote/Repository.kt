@@ -66,4 +66,15 @@ class Repository private constructor(
         }
     }
 
+    fun getDetailCategory(slug: String): LiveData<Resource<Category>> = liveData {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getDetailCategory(slug)
+            emit(Resource.Success(response.data))
+
+        } catch (e: Exception) {
+            emit(Resource.Error(e.toString()))
+        }
+    }
+
 }
